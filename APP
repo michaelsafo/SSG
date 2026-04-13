@@ -1,0 +1,1086 @@
+import { useState, useEffect, useRef } from "react";
+
+// ── BRAND COLORS ──────────────────────────────────────────────────────────────
+const C = {
+  gold: "#F5C518",
+  goldLight: "#FFD94A",
+  goldDark: "#C9A000",
+  black: "#0A0A0A",
+  dark: "#161616",
+  gray: "#242424",
+  border: "#1e1e1e",
+  muted: "#666",
+  text: "#cccccc",
+  white: "#ffffff",
+};
+
+// ── SPORT ICON LOADER ─────────────────────────────────────────────────────────
+const SportLoader = ({ visible }) => {
+  if (!visible) return null;
+  return (
+    <div style={{
+      position: "fixed", inset: 0, zIndex: 9999,
+      background: C.black,
+      display: "flex", flexDirection: "column",
+      alignItems: "center", justifyContent: "center", gap: 16,
+    }}>
+      <div style={{ display: "flex", gap: 18, alignItems: "flex-end" }}>
+        {/* Basketball */}
+        <svg width="26" height="26" viewBox="0 0 24 24" style={{ animation: "bounce 0.75s ease-in-out infinite", animationDelay: "0s" }}>
+          <defs>
+            <radialGradient id="bbg2" cx="38%" cy="32%">
+              <stop offset="0%" stopColor="#f5a623" />
+              <stop offset="55%" stopColor="#d4621a" />
+              <stop offset="100%" stopColor="#8b3a0a" />
+            </radialGradient>
+            <clipPath id="bkc"><circle cx="12" cy="12" r="11" /></clipPath>
+          </defs>
+          <circle cx="12" cy="12" r="11" fill="url(#bbg2)" />
+          <path d="M1 12 Q6 6 12 6 Q18 6 23 12" stroke="rgba(0,0,0,0.35)" strokeWidth="1.2" fill="none" clipPath="url(#bkc)" />
+          <path d="M1 12 Q6 18 12 18 Q18 18 23 12" stroke="rgba(0,0,0,0.35)" strokeWidth="1.2" fill="none" clipPath="url(#bkc)" />
+          <line x1="12" y1="1" x2="12" y2="23" stroke="rgba(0,0,0,0.3)" strokeWidth="1.2" clipPath="url(#bkc)" />
+        </svg>
+        {/* Football */}
+        <svg width="32" height="24" viewBox="0 0 30 22" style={{ animation: "bounce 0.75s ease-in-out infinite", animationDelay: "0.18s" }}>
+          <defs>
+            <radialGradient id="fbg2" cx="38%" cy="30%">
+              <stop offset="0%" stopColor="#c8692a" />
+              <stop offset="55%" stopColor="#8b3d0f" />
+              <stop offset="100%" stopColor="#5a2508" />
+            </radialGradient>
+          </defs>
+          <ellipse cx="15" cy="11" rx="14" ry="9" fill="url(#fbg2)" />
+          <ellipse cx="3.5" cy="11" rx="2.5" ry="5" fill="white" opacity="0.85" />
+          <ellipse cx="26.5" cy="11" rx="2.5" ry="5" fill="white" opacity="0.85" />
+          <line x1="15" y1="5" x2="15" y2="17" stroke="white" strokeWidth="1.3" opacity="0.9" />
+          <line x1="12" y1="8" x2="18" y2="8" stroke="white" strokeWidth="1.1" opacity="0.85" />
+          <line x1="12" y1="11" x2="18" y2="11" stroke="white" strokeWidth="1.1" opacity="0.85" />
+          <line x1="12" y1="14" x2="18" y2="14" stroke="white" strokeWidth="1.1" opacity="0.85" />
+        </svg>
+        {/* Soccer */}
+        <svg width="26" height="26" viewBox="0 0 24 24" style={{ animation: "bounce 0.75s ease-in-out infinite", animationDelay: "0.36s" }}>
+          <defs>
+            <radialGradient id="sgrad2" cx="38%" cy="32%">
+              <stop offset="0%" stopColor="#ffffff" />
+              <stop offset="100%" stopColor="#cccccc" />
+            </radialGradient>
+            <clipPath id="skc"><circle cx="12" cy="12" r="11" /></clipPath>
+          </defs>
+          <circle cx="12" cy="12" r="11" fill="url(#sgrad2)" />
+          <polygon points="12,3 14.4,5.6 13.5,8.5 10.5,8.5 9.6,5.6" fill="#1a1a1a" clipPath="url(#skc)" />
+          <polygon points="14.4,5.6 17.8,5.2 19.5,8.2 17.2,10.5 13.5,8.5" fill="#1a1a1a" clipPath="url(#skc)" />
+          <polygon points="19.5,8.2 21.5,11.5 19.5,14.5 16.5,13.5 17.2,10.5" fill="#1a1a1a" clipPath="url(#skc)" />
+          <polygon points="16.5,13.5 17.5,17 14.5,18.5 12,16.5 13.5,13.5" fill="#1a1a1a" clipPath="url(#skc)" />
+          <polygon points="10.5,13.5 12,16.5 9.5,18.5 6.5,17 7.5,13.5" fill="#1a1a1a" clipPath="url(#skc)" />
+          <polygon points="4.5,14.5 2.5,11.5 4.5,8.2 7.2,10.5 6.5,13.5" fill="#1a1a1a" clipPath="url(#skc)" />
+          <polygon points="9.6,5.6 6.2,5.2 4.5,8.2 7.2,10.5 10.5,8.5" fill="#1a1a1a" clipPath="url(#skc)" />
+        </svg>
+        {/* Track Spike */}
+        <svg width="36" height="22" viewBox="0 0 34 20" style={{ animation: "bounce 0.75s ease-in-out infinite", animationDelay: "0.54s" }}>
+          <defs>
+            <radialGradient id="skg2" cx="40%" cy="35%">
+              <stop offset="0%" stopColor="#F5C518" />
+              <stop offset="70%" stopColor="#C9A000" />
+              <stop offset="100%" stopColor="#8b6e00" />
+            </radialGradient>
+          </defs>
+          <path d="M2 16 Q4 18 10 18 L28 18 Q31 18 32 16 L31 14 Q28 12 24 13 L8 13 Q4 13 2 14 Z" fill="#1a1a1a" />
+          <rect x="6" y="17" width="2" height="3" rx="0.5" fill="#888" />
+          <rect x="11" y="17" width="2" height="3" rx="0.5" fill="#888" />
+          <rect x="16" y="17" width="2" height="3" rx="0.5" fill="#888" />
+          <rect x="21" y="17" width="2" height="3" rx="0.5" fill="#888" />
+          <path d="M2 14 Q3 8 8 6 Q14 4 20 5 L28 6 Q31 7 32 10 L32 14 Q28 12 24 13 L8 13 Q4 13 2 14 Z" fill="url(#skg2)" />
+          <path d="M14 5.5 Q18 5 22 6 L24 10 Q20 9 16 9.5 Z" fill="rgba(255,255,255,0.2)" />
+          <path d="M13 8 Q14.5 7 16 7.5 Q17.5 8 19 7.5 Q20.5 7 22 7.8" stroke="white" strokeWidth="0.8" fill="none" opacity="0.7" />
+        </svg>
+      </div>
+      <div style={{ display: "flex", gap: 18, marginTop: 2 }}>
+        {[24, 28, 24, 20].map((w, i) => (
+          <div key={i} style={{
+            width: w, height: 5, borderRadius: "50%",
+            background: "rgba(245,197,24,0.2)",
+            animation: "shadowPulse 0.75s ease-in-out infinite",
+            animationDelay: `${i * 0.18}s`,
+          }} />
+        ))}
+      </div>
+      <div style={{
+        fontFamily: "'Barlow Condensed', sans-serif",
+        fontSize: 11, letterSpacing: 4,
+        textTransform: "uppercase", color: "#333",
+        marginTop: 4,
+      }}>Loading</div>
+    </div>
+  );
+};
+
+// ── DATA ──────────────────────────────────────────────────────────────────────
+const ATHLETES = [
+  { id: 1, name: "Ben Bradford", school: "UNC Charlotte", sport: "Basketball", position: "#3 · Shooting Guard", icon: "🏀", score: 87 },
+  { id: 2, name: "Barfuo Boakye-Boaten", school: "NC A&T University", sport: "Track & Field", position: "Sprints", icon: "🏃", score: 82 },
+  { id: 3, name: "Salif Leintu", school: "Yale University", sport: "Soccer", position: "#9 · Forward", icon: "⚽", score: 91 },
+  { id: 4, name: "Michael Nwaogwugwu", school: "Bryant University", sport: "Football", position: "#26 · Defensive Back", icon: "🏈", score: 78 },
+];
+
+const BRANDS = [
+  { name: "Pepsi", icon: "🥤", cat: "Beverage", match: 94 },
+  { name: "Under Armour", icon: "👟", cat: "Apparel", match: 91 },
+  { name: "Ledo Pizza", icon: "🍕", cat: "Food", match: 88 },
+  { name: "Sardi's", icon: "🍗", cat: "Restaurant", match: 85 },
+  { name: "Playa Bowls", icon: "🍍", cat: "Health Food", match: 82 },
+  { name: "Owala", icon: "💧", cat: "Hydration", match: 79 },
+  { name: "Bruster's", icon: "🍦", cat: "Dessert", match: 76 },
+  { name: "Sistahs' Sweets", icon: "🍰", cat: "Bakery", match: 73 },
+];
+
+const SERVICES = [
+  { icon: "🤖", title: "AI-Powered Matching", desc: "In order to accurately connect you to relevant brands and institutions, SAFO AI analyzes thousands of data points to find your perfect fit.", num: "01" },
+  { icon: "🤝", title: "Contract Negotiation", desc: "Our team of certified agents negotiates every endorsement, NIL agreement, and pay-to-play contract so you get compensated exactly what you are worth.", num: "02" },
+  { icon: "⚖️", title: "NIL Compliance", desc: "Stay eligible and earning. We keep you fully informed on all NCAA rules, conference regs, and state law so nothing surprises you.", num: "03" },
+  { icon: "🎯", title: "Marketing & Brand Strategy", desc: "Consider SSG your full-service marketing team for your NIL journey. Your vision is our mission.", num: "04" },
+  { icon: "💰", title: "Financial & Legal Literacy", desc: "We connect athletes with trusted legal and financial professionals. Educated athletes make better decisions.", num: "05" },
+  { icon: "📈", title: "Career Development", desc: "We build brands that last beyond athletics. Post-grad business and professional development awaits.", num: "06" },
+];
+
+const ARTICLES = [
+  { id: "nil-value", cat: "Financial Literacy", icon: "💰", title: "How Much Are You Worth?", desc: "Most athletes have no idea how much money is on the table. SAFO AI helps you understand your true market value.", color: "#1a1a0a" },
+  { id: "personal-brand", cat: "Brand Building", icon: "📱", title: "5 Ways to Build Your Personal Brand", desc: "Your social media presence is your NIL resume. Here's how to make it work for you.", color: "#0a0a1a" },
+  { id: "nil-rules", cat: "Compliance", icon: "⚖️", title: "Navigating NIL Rules", desc: "The NCAA rules can be overwhelming. We break it down so you stay eligible and earning.", color: "#0a1a0a" },
+  { id: "mid-major", cat: "NIL Success", icon: "🏆", title: "Mid-Major Athletes Are Getting Their Cut", desc: "SSG was built to give mid-major athletes the same access Power Four athletes have always had.", color: "#1a0a0a" },
+  { id: "brand-wants", cat: "Partnerships", icon: "🤝", title: "What Brands Look For", desc: "Brands are looking for authenticity above all else. Here's what makes you attractive to sponsors.", color: "#0a1a1a" },
+  { id: "ai-nil", cat: "Technology", icon: "🤖", title: "How AI Is Changing NIL", desc: "SAFO AI is built from the ground up to serve the student-athlete first.", color: "#1a1a1a" },
+];
+
+// ── REUSABLE COMPONENTS ───────────────────────────────────────────────────────
+
+const GoldDivider = () => (
+  <div style={{ width: 48, height: 3, background: C.gold, marginBottom: 18, borderRadius: 2 }} />
+);
+
+const Eyebrow = ({ children }) => (
+  <div style={{
+    fontFamily: "'Barlow Condensed', sans-serif",
+    fontSize: 11, letterSpacing: 5, textTransform: "uppercase",
+    color: C.gold, marginBottom: 10,
+  }}>{children}</div>
+);
+
+const BigTitle = ({ children, size = 44 }) => (
+  <div style={{
+    fontFamily: "'Bebas Neue', cursive",
+    fontSize: size, lineHeight: 0.92, color: C.white,
+    marginBottom: 16,
+  }}>{children}</div>
+);
+
+const Card = ({ children, onClick, style = {} }) => (
+  <div onClick={onClick} style={{
+    background: C.dark, border: `1px solid ${C.border}`,
+    borderRadius: 18, padding: "22px 20px",
+    transition: "border-color .2s",
+    cursor: onClick ? "pointer" : "default",
+    ...style,
+  }}>{children}</div>
+);
+
+const GoldBtn = ({ children, onClick, outline = false, style = {} }) => (
+  <button onClick={onClick} style={{
+    background: outline ? "transparent" : C.gold,
+    color: outline ? C.gold : C.black,
+    border: outline ? `2px solid ${C.gold}` : "none",
+    borderRadius: 30, padding: "13px 28px",
+    fontFamily: "'Barlow Condensed', sans-serif",
+    fontWeight: 700, fontSize: 13, letterSpacing: 3,
+    textTransform: "uppercase", cursor: "pointer",
+    transition: "all .2s",
+    ...style,
+  }}>{children}</button>
+);
+
+const Tag = ({ children, variant = "outline" }) => {
+  const styles = {
+    outline: { border: `1.5px solid ${C.gold}`, color: C.gold, background: "transparent" },
+    solid: { background: C.gold, color: C.black, border: "none" },
+    ghost: { border: `1.5px solid #333`, color: "#666", background: "transparent" },
+  };
+  return (
+    <span style={{
+      padding: "5px 12px", borderRadius: 6,
+      fontFamily: "'Barlow Condensed', sans-serif",
+      fontSize: 10, letterSpacing: 2, textTransform: "uppercase",
+      fontWeight: 700, ...styles[variant],
+    }}>{children}</span>
+  );
+};
+
+const StatBlock = ({ num, label, sub }) => (
+  <div style={{
+    background: C.dark, border: `1px solid ${C.border}`,
+    borderRadius: 16, padding: "22px 16px",
+    position: "relative", overflow: "hidden",
+  }}>
+    <div style={{
+      fontFamily: "'Bebas Neue', cursive",
+      fontSize: 44, color: C.gold, lineHeight: 1,
+      textShadow: `0 0 30px rgba(245,197,24,0.3)`,
+    }}>{num}</div>
+    <div style={{
+      fontFamily: "'Barlow Condensed', sans-serif",
+      fontSize: 9, letterSpacing: 3, textTransform: "uppercase",
+      color: "#555", marginTop: 4,
+    }}>{label}</div>
+    {sub && <div style={{ fontSize: 11, color: "#444", marginTop: 3 }}>{sub}</div>}
+  </div>
+);
+
+// ── SCREENS ───────────────────────────────────────────────────────────────────
+
+// HOME
+const HomeScreen = ({ onNav }) => {
+  const [visible, setVisible] = useState(false);
+  useEffect(() => { setTimeout(() => setVisible(true), 100); }, []);
+
+  return (
+    <div style={{ minHeight: "100%", background: C.black }}>
+      {/* Hero */}
+      <div style={{
+        minHeight: "55vh", position: "relative", overflow: "hidden",
+        background: "linear-gradient(160deg, #141400, #0a0a0a)",
+        display: "flex", alignItems: "flex-end", padding: "0 24px 40px",
+      }}>
+        <div style={{
+          position: "absolute", inset: 0,
+          background: "radial-gradient(ellipse at 30% 60%, rgba(245,197,24,0.14) 0%, transparent 70%)",
+          animation: "pulseH 4s ease-in-out infinite alternate",
+        }} />
+        <div style={{
+          position: "absolute", bottom: -10, right: -8,
+          fontFamily: "'Bebas Neue', cursive",
+          fontSize: 120, color: "rgba(245,197,24,0.04)",
+          pointerEvents: "none", lineHeight: 1,
+        }}>NIL</div>
+        <div style={{ position: "relative", zIndex: 1, opacity: visible ? 1 : 0, transform: visible ? "none" : "translateY(20px)", transition: "all .7s ease" }}>
+          <div style={{
+            fontFamily: "'Bebas Neue', cursive",
+            fontSize: 62, lineHeight: 0.88, color: C.white,
+            marginBottom: 12,
+          }}>
+            SAFO<br /><span style={{ color: C.gold }}>SPORTS</span><br />GROUP
+          </div>
+          <div style={{
+            fontFamily: "'Barlow Condensed', sans-serif",
+            fontSize: 11, letterSpacing: 3, textTransform: "uppercase",
+            color: "#888", marginBottom: 20,
+          }}>Your Favorite Athlete's Favorite Agency</div>
+          <GoldBtn onClick={() => onNav("contact")}>JOIN THE ROSTER</GoldBtn>
+        </div>
+      </div>
+
+      {/* Gold ticker */}
+      <div style={{ background: C.gold, padding: "10px 0", overflow: "hidden", whiteSpace: "nowrap" }}>
+        <div style={{ display: "inline-flex", animation: "ticker 20s linear infinite" }}>
+          {["Worry About Ball", "We Handle the Rest", "AI-Powered NIL Matching", "Your Brand. Your Value.", "$80K+ Negotiated", "Empowering Athletes", "Building Futures",
+            "Worry About Ball", "We Handle the Rest", "AI-Powered NIL Matching", "Your Brand. Your Value.", "$80K+ Negotiated", "Empowering Athletes", "Building Futures"].map((t, i) => (
+            <span key={i} style={{
+              fontFamily: "'Bebas Neue', cursive",
+              fontSize: 17, letterSpacing: 3, color: C.black,
+              padding: "0 28px", display: "inline-flex", alignItems: "center", gap: 12,
+            }}>
+              {t}<span style={{ fontSize: 8, opacity: 0.35 }}>✦</span>
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* Stats */}
+      <div style={{ padding: "36px 20px 0" }}>
+        <Eyebrow>Why Work With Us</Eyebrow>
+        <GoldDivider />
+        <BigTitle size={38}>THE FIRST<br /><span style={{ color: C.gold }}>STUDENT-FOCUSED</span><br />NIL AGENCY</BigTitle>
+        <p style={{ fontSize: 14, lineHeight: 1.7, color: C.text, marginBottom: 24 }}>
+          Safo Sports Group connects college athletes with reputable brands and institutions while giving them the human representation they deserve.
+        </p>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 32 }}>
+          <StatBlock num="4" label="Athletes Signed" sub="Across 4 sports" />
+          <StatBlock num="$80K+" label="Deals Negotiated" sub="And growing" />
+          <StatBlock num="4" label="States Registered" sub="Licensed to negotiate" />
+          <StatBlock num="$1.67B" label="NIL Market" sub="Still unregulated" />
+        </div>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 32 }}>
+          {["Gen-Z Led", "AI Powered", "Culture First", "Mid-Major Focus", "NIL Compliant", "Athlete Advocates"].map((t, i) => (
+            <Tag key={i} variant={i % 3 === 0 ? "solid" : i % 3 === 1 ? "outline" : "ghost"}>{t}</Tag>
+          ))}
+        </div>
+        <GoldBtn onClick={() => onNav("about")} outline style={{ width: "100%", textAlign: "center" }}>LEARN MORE</GoldBtn>
+      </div>
+
+      {/* Services preview */}
+      <div style={{ padding: "36px 20px 0" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 20 }}>
+          <div>
+            <Eyebrow>What We Offer</Eyebrow>
+            <BigTitle size={36}>OUR <span style={{ color: C.gold }}>SERVICES</span></BigTitle>
+          </div>
+          <button onClick={() => onNav("services")} style={{ background: "none", border: "none", color: C.gold, fontFamily: "'Barlow Condensed', sans-serif", fontSize: 12, letterSpacing: 2, textTransform: "uppercase", cursor: "pointer", textDecoration: "underline" }}>All →</button>
+        </div>
+        {SERVICES.slice(0, 3).map((s, i) => (
+          <Card key={i} style={{ marginBottom: 12 }}>
+            <div style={{ width: 40, height: 40, background: C.gold, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, marginBottom: 14 }}>{s.icon}</div>
+            <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 17, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", color: C.white, marginBottom: 8 }}>{s.title}</div>
+            <div style={{ fontSize: 13, lineHeight: 1.6, color: "#888" }}>{s.desc}</div>
+          </Card>
+        ))}
+      </div>
+
+      {/* CTA Band */}
+      <div style={{ background: C.gold, padding: "56px 24px", textAlign: "center", marginTop: 36, position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", fontFamily: "'Bebas Neue', cursive", fontSize: 140, color: "rgba(0,0,0,0.06)", left: "50%", top: "50%", transform: "translate(-50%,-50%)", pointerEvents: "none" }}>SSG</div>
+        <div style={{ fontFamily: "'Bebas Neue', cursive", fontSize: 48, color: C.black, lineHeight: 0.92, marginBottom: 16, position: "relative", zIndex: 1 }}>
+          READY TO GET<br />SIGNED?
+        </div>
+        <p style={{ fontSize: 14, color: "rgba(0,0,0,0.65)", marginBottom: 24, lineHeight: 1.6, position: "relative", zIndex: 1 }}>
+          Stop leaving NIL money on the table. Let SSG handle the brands so you can focus on your game.
+        </p>
+        <button onClick={() => onNav("contact")} style={{ background: C.black, color: C.gold, border: "none", borderRadius: 30, padding: "14px 32px", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fontSize: 13, letterSpacing: 3, textTransform: "uppercase", cursor: "pointer", position: "relative", zIndex: 1 }}>
+          JOIN THE ROSTER TODAY
+        </button>
+      </div>
+      <div style={{ height: 80 }} />
+    </div>
+  );
+};
+
+// SAFO AI SCREEN
+const SAFOScreen = ({ onNav }) => {
+  const [step, setStep] = useState(0); // 0=form, 1=calculating, 2=results
+  const [form, setForm] = useState({ name: "", sport: "", school: "", followers: "", position: "", conference: "" });
+  const [score, setScore] = useState(0);
+  const [animScore, setAnimScore] = useState(0);
+  const [matchedBrands, setMatchedBrands] = useState([]);
+
+  const sports = ["Basketball", "Football", "Soccer", "Track & Field", "Baseball", "Softball", "Lacrosse", "Tennis", "Swimming", "Volleyball"];
+
+  const runAnalysis = () => {
+    if (!form.name || !form.sport) return;
+    setStep(1);
+    setTimeout(() => {
+      const base = 65;
+      const followerBonus = Math.min(20, (parseInt(form.followers) || 0) / 500);
+      const sportBonus = ["Basketball", "Football", "Soccer"].includes(form.sport) ? 8 : 4;
+      const final = Math.min(99, Math.round(base + followerBonus + sportBonus + Math.random() * 6));
+      setScore(final);
+      const shuffled = [...BRANDS].sort(() => Math.random() - 0.5).slice(0, 5).map(b => ({ ...b, match: Math.round(60 + Math.random() * 35) })).sort((a, b) => b.match - a.match);
+      setMatchedBrands(shuffled);
+      setStep(2);
+      let current = 0;
+      const interval = setInterval(() => {
+        current += 2;
+        if (current >= final) { setAnimScore(final); clearInterval(interval); }
+        else setAnimScore(current);
+      }, 20);
+    }, 2200);
+  };
+
+  const reset = () => { setStep(0); setForm({ name: "", sport: "", school: "", followers: "", position: "", conference: "" }); setScore(0); setAnimScore(0); };
+
+  return (
+    <div style={{ minHeight: "100%", background: C.black, padding: "20px 20px 100px" }}>
+      <Eyebrow>Our Technology</Eyebrow>
+      <GoldDivider />
+      <BigTitle size={42}>MEET<br /><span style={{ color: C.gold }}>SAFO AI</span></BigTitle>
+
+      <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: C.gold, color: C.black, padding: "6px 14px", borderRadius: 30, fontFamily: "'Barlow Condensed', sans-serif", fontSize: 11, letterSpacing: 2, textTransform: "uppercase", fontWeight: 700, marginBottom: 20 }}>
+        ⚡ Powered by AI
+      </div>
+
+      <p style={{ fontSize: 14, lineHeight: 1.7, color: C.text, marginBottom: 24 }}>
+        <strong style={{ color: C.white }}>SAFO AI</strong> stands for{" "}
+        <span style={{ color: C.gold }}>S</span>tudent{" "}
+        <span style={{ color: C.gold }}>A</span>thlete{" "}
+        <span style={{ color: C.gold }}>F</span>orecasting and{" "}
+        <span style={{ color: C.gold }}>O</span>ptimization.
+        Fill out your profile below and get your NIL match score instantly.
+      </p>
+
+      {step === 0 && (
+        <div>
+          <Card style={{ marginBottom: 16 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 20, paddingBottom: 16, borderBottom: `1px solid ${C.border}` }}>
+              <div style={{ width: 48, height: 48, background: C.gold, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, flexShrink: 0 }}>🏆</div>
+              <div>
+                <div style={{ fontFamily: "'Bebas Neue', cursive", fontSize: 20, color: C.white, letterSpacing: 1 }}>Athlete Profile</div>
+                <div style={{ fontSize: 12, color: "#555" }}>Complete your profile to unlock your match score</div>
+              </div>
+            </div>
+            {[
+              { key: "name", label: "Full Name", placeholder: "Your name" },
+              { key: "school", label: "University", placeholder: "Your school" },
+              { key: "position", label: "Position / Event", placeholder: "e.g. Point Guard, Sprinter" },
+              { key: "conference", label: "Conference", placeholder: "e.g. ACC, Big Ten, MEAC" },
+              { key: "followers", label: "Total Social Media Followers", placeholder: "e.g. 5000" },
+            ].map(f => (
+              <div key={f.key} style={{ marginBottom: 14 }}>
+                <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 9, letterSpacing: 2, textTransform: "uppercase", color: C.gold, marginBottom: 5 }}>{f.label}</div>
+                <input
+                  value={form[f.key]}
+                  onChange={e => setForm(prev => ({ ...prev, [f.key]: e.target.value }))}
+                  placeholder={f.placeholder}
+                  style={{ width: "100%", background: C.black, border: `1px solid ${C.border}`, borderRadius: 10, padding: "11px 14px", color: C.white, fontFamily: "'Barlow', sans-serif", fontSize: 14, outline: "none", boxSizing: "border-box" }}
+                />
+              </div>
+            ))}
+            <div style={{ marginBottom: 20 }}>
+              <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 9, letterSpacing: 2, textTransform: "uppercase", color: C.gold, marginBottom: 5 }}>College Sport</div>
+              <select value={form.sport} onChange={e => setForm(prev => ({ ...prev, sport: e.target.value }))}
+                style={{ width: "100%", background: C.black, border: `1px solid ${C.border}`, borderRadius: 10, padding: "11px 14px", color: form.sport ? C.white : "#555", fontFamily: "'Barlow', sans-serif", fontSize: 14, outline: "none", boxSizing: "border-box" }}>
+                <option value="">Select your sport</option>
+                {sports.map(s => <option key={s} value={s}>{s}</option>)}
+              </select>
+            </div>
+            <GoldBtn onClick={runAnalysis} style={{ width: "100%", textAlign: "center" }}>
+              ANALYZE MY NIL VALUE
+            </GoldBtn>
+          </Card>
+
+          {/* Acronym breakdown */}
+          <div style={{ marginTop: 32 }}>
+            <Eyebrow>The Name Behind the Model</Eyebrow>
+            <GoldDivider />
+            <BigTitle size={32}>WHAT DOES<br /><span style={{ color: C.gold }}>SAFO STAND FOR?</span></BigTitle>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginTop: 16 }}>
+              {[
+                { l: "S", w: "Student", d: "Built for student-athletes currently enrolled in college" },
+                { l: "A", w: "Athlete", d: "Every feature designed around what the athlete needs first" },
+                { l: "F", w: "Forecasting", d: "Predicts your NIL value before you sign anything" },
+                { l: "O", w: "Optimization", d: "Continuously improves using real-world deal feedback" },
+              ].map((a, i) => (
+                <Card key={i}>
+                  <div style={{ fontFamily: "'Bebas Neue', cursive", fontSize: 48, color: C.gold, lineHeight: 1 }}>{a.l}</div>
+                  <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 12, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", color: C.white, marginTop: 4 }}>{a.w}</div>
+                  <div style={{ fontSize: 11, color: "#555", marginTop: 4, lineHeight: 1.4 }}>{a.d}</div>
+                </Card>
+              ))}
+            </div>
+            <Card style={{ marginTop: 10, background: C.gold, border: "none", textAlign: "center" }}>
+              <div style={{ fontFamily: "'Bebas Neue', cursive", fontSize: 48, color: C.black, lineHeight: 1 }}>AI</div>
+              <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 12, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", color: C.black, marginTop: 4 }}>Artificial Intelligence</div>
+              <div style={{ fontSize: 11, color: "rgba(0,0,0,0.6)", marginTop: 4 }}>Powered by GPT + RAG pipeline with Pinecone vector search</div>
+            </Card>
+          </div>
+        </div>
+      )}
+
+      {step === 1 && (
+        <Card style={{ textAlign: "center", padding: "48px 24px" }}>
+          <div style={{ fontSize: 48, marginBottom: 20 }}>🧠</div>
+          <div style={{ fontFamily: "'Bebas Neue', cursive", fontSize: 28, color: C.gold, marginBottom: 12 }}>ANALYZING YOUR PROFILE</div>
+          <p style={{ fontSize: 13, color: "#666", marginBottom: 28, lineHeight: 1.6 }}>
+            SAFO AI is scanning brand databases, evaluating your social presence, and calculating your NIL viability score...
+          </p>
+          <div style={{ display: "flex", gap: 12, justifyContent: "center" }}>
+            {["Scanning brands", "Evaluating profile", "Calculating score"].map((t, i) => (
+              <div key={i} style={{ fontSize: 11, color: "#444", fontFamily: "'Barlow Condensed', sans-serif", letterSpacing: 1, textTransform: "uppercase", animation: "fadeInOut 1.5s ease-in-out infinite", animationDelay: `${i * 0.5}s` }}>{t}</div>
+            ))}
+          </div>
+        </Card>
+      )}
+
+      {step === 2 && (
+        <div>
+          {/* Score card */}
+          <Card style={{ background: "linear-gradient(135deg, rgba(245,197,24,0.1), rgba(245,197,24,0.04))", border: `1px solid rgba(245,197,24,0.3)`, marginBottom: 20 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+              <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 10, letterSpacing: 3, textTransform: "uppercase", color: C.gold }}>SAFO AI Match Score</div>
+              <div style={{ fontSize: 11, color: "#555" }}>{form.name}</div>
+            </div>
+            <div style={{ fontFamily: "'Bebas Neue', cursive", fontSize: 72, color: C.white, lineHeight: 1 }}>
+              {animScore}<span style={{ fontSize: 32, color: C.gold }}>/100</span>
+            </div>
+            <div style={{ height: 6, background: "#222", borderRadius: 3, margin: "14px 0 8px" }}>
+              <div style={{ height: "100%", background: `linear-gradient(90deg, ${C.gold}, ${C.goldLight})`, borderRadius: 3, width: `${animScore}%`, transition: "width .05s linear" }} />
+            </div>
+            <div style={{ fontSize: 12, color: "#888" }}>
+              {animScore >= 85 ? "🔥 Exceptional NIL potential" : animScore >= 75 ? "💪 Strong brand alignment" : "📈 Good NIL opportunity"}
+            </div>
+          </Card>
+
+          <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 13, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", color: C.gold, marginBottom: 14 }}>
+            Top Brand Matches for {form.sport}
+          </div>
+
+          {matchedBrands.map((b, i) => (
+            <Card key={i} style={{ marginBottom: 10, display: "flex", alignItems: "center", gap: 16, padding: "16px 18px" }}>
+              <div style={{ fontSize: 28, flexShrink: 0 }}>{b.icon}</div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 16, fontWeight: 700, textTransform: "uppercase", color: C.white }}>{b.name}</div>
+                <div style={{ fontSize: 11, color: "#555", textTransform: "uppercase", letterSpacing: 1 }}>{b.cat}</div>
+                <div style={{ height: 3, background: "#222", borderRadius: 2, marginTop: 8 }}>
+                  <div style={{ height: "100%", background: C.gold, borderRadius: 2, width: `${b.match}%` }} />
+                </div>
+              </div>
+              <div style={{ fontFamily: "'Bebas Neue', cursive", fontSize: 24, color: C.gold, flexShrink: 0 }}>{b.match}%</div>
+            </Card>
+          ))}
+
+          <div style={{ marginTop: 24, display: "flex", gap: 12 }}>
+            <GoldBtn onClick={() => onNav("contact")} style={{ flex: 1, textAlign: "center" }}>GET SIGNED</GoldBtn>
+            <GoldBtn onClick={reset} outline style={{ flex: 1, textAlign: "center" }}>RUN AGAIN</GoldBtn>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ROSTER SCREEN
+const RosterScreen = ({ onNav }) => {
+  const [selected, setSelected] = useState(null);
+  if (selected) {
+    const a = ATHLETES.find(x => x.id === selected);
+    return (
+      <div style={{ minHeight: "100%", background: C.black, padding: "20px 20px 100px" }}>
+        <button onClick={() => setSelected(null)} style={{ background: "none", border: "none", color: C.gold, fontFamily: "'Barlow Condensed', sans-serif", fontSize: 13, letterSpacing: 2, textTransform: "uppercase", cursor: "pointer", marginBottom: 28 }}>← Back</button>
+        <div style={{ height: 200, background: "linear-gradient(135deg, #111100, #1e1800)", borderRadius: 20, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 80, marginBottom: 24, position: "relative" }}>
+          {a.icon}
+          <div style={{ position: "absolute", top: 14, right: 14, background: C.gold, color: C.black, fontFamily: "'Barlow Condensed', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", padding: "4px 10px", borderRadius: 20 }}>{a.sport}</div>
+        </div>
+        <div style={{ fontFamily: "'Bebas Neue', cursive", fontSize: 36, color: C.white, marginBottom: 4 }}>{a.name}</div>
+        <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 13, letterSpacing: 2, textTransform: "uppercase", color: "#555", marginBottom: 4 }}>{a.school}</div>
+        <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 12, color: C.gold, letterSpacing: 2, textTransform: "uppercase", fontWeight: 700, marginBottom: 24 }}>{a.position}</div>
+        <Card style={{ marginBottom: 16, background: "linear-gradient(135deg, rgba(245,197,24,0.08), rgba(245,197,24,0.03))", border: `1px solid rgba(245,197,24,0.2)` }}>
+          <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 10, letterSpacing: 3, textTransform: "uppercase", color: C.gold, marginBottom: 8 }}>SAFO AI NIL Score</div>
+          <div style={{ fontFamily: "'Bebas Neue', cursive", fontSize: 56, color: C.white, lineHeight: 1 }}>{a.score}<span style={{ fontSize: 24, color: C.gold }}>/100</span></div>
+          <div style={{ height: 4, background: "#222", borderRadius: 2, marginTop: 12 }}>
+            <div style={{ height: "100%", background: `linear-gradient(90deg, ${C.gold}, ${C.goldLight})`, borderRadius: 2, width: `${a.score}%` }} />
+          </div>
+        </Card>
+        <GoldBtn onClick={() => onNav("contact")} style={{ width: "100%", textAlign: "center" }}>INQUIRE ABOUT THIS ATHLETE</GoldBtn>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ minHeight: "100%", background: C.black, padding: "20px 20px 100px" }}>
+      <Eyebrow>Current Athletes</Eyebrow>
+      <GoldDivider />
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 24 }}>
+        <BigTitle size={42}>OUR <span style={{ color: C.gold }}>ROSTER</span></BigTitle>
+        <button onClick={() => onNav("contact")} style={{ background: "none", border: "none", color: C.gold, fontFamily: "'Barlow Condensed', sans-serif", fontSize: 11, letterSpacing: 2, textTransform: "uppercase", cursor: "pointer", textDecoration: "underline" }}>Join →</button>
+      </div>
+
+      {ATHLETES.map(a => (
+        <div key={a.id} onClick={() => setSelected(a.id)} style={{ background: C.dark, border: `1px solid ${C.border}`, borderRadius: 20, overflow: "hidden", marginBottom: 14, cursor: "pointer", display: "flex", transition: "border-color .2s" }}>
+          <div style={{ width: 110, background: "linear-gradient(135deg, #111100, #1e1800)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 44, flexShrink: 0, position: "relative" }}>
+            {a.icon}
+            <div style={{ position: "absolute", bottom: 8, left: "50%", transform: "translateX(-50%)", background: C.gold, color: C.black, fontFamily: "'Barlow Condensed', sans-serif", fontSize: 8, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", padding: "2px 7px", borderRadius: 10, whiteSpace: "nowrap" }}>{a.sport}</div>
+          </div>
+          <div style={{ padding: "18px 16px", flex: 1 }}>
+            <div style={{ fontFamily: "'Bebas Neue', cursive", fontSize: 20, color: C.white, letterSpacing: 1, marginBottom: 2 }}>{a.name}</div>
+            <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 11, letterSpacing: 1, textTransform: "uppercase", color: "#555", marginBottom: 6 }}>{a.school}</div>
+            <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 10, color: C.gold, letterSpacing: 2, textTransform: "uppercase", fontWeight: 700 }}>{a.position}</div>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 10 }}>
+              <div style={{ flex: 1, height: 3, background: "#222", borderRadius: 2 }}>
+                <div style={{ height: "100%", background: C.gold, borderRadius: 2, width: `${a.score}%` }} />
+              </div>
+              <div style={{ fontFamily: "'Bebas Neue', cursive", fontSize: 16, color: C.gold, flexShrink: 0 }}>{a.score}</div>
+            </div>
+          </div>
+        </div>
+      ))}
+
+      {/* Traction */}
+      <Card style={{ marginTop: 12, padding: "28px 20px" }}>
+        <Eyebrow>Traction</Eyebrow>
+        <BigTitle size={30}>THE NUMBERS<br /><span style={{ color: C.gold }}>SPEAK FOR THEMSELVES</span></BigTitle>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, marginTop: 16 }}>
+          <StatBlock num="4" label="Sports" />
+          <StatBlock num="$80K+" label="Negotiated" />
+          <StatBlock num="4" label="States" />
+        </div>
+      </Card>
+
+      <div style={{ marginTop: 24 }}>
+        <div style={{ background: C.gold, borderRadius: 18, padding: "36px 20px", textAlign: "center", position: "relative", overflow: "hidden" }}>
+          <div style={{ position: "absolute", fontFamily: "'Bebas Neue', cursive", fontSize: 100, color: "rgba(0,0,0,0.06)", left: "50%", top: "50%", transform: "translate(-50%,-50%)", pointerEvents: "none" }}>SSG</div>
+          <div style={{ fontFamily: "'Bebas Neue', cursive", fontSize: 38, color: C.black, lineHeight: 0.92, marginBottom: 12, position: "relative", zIndex: 1 }}>YOUR NAME<br />BELONGS HERE</div>
+          <button onClick={() => onNav("contact")} style={{ background: C.black, color: C.gold, border: "none", borderRadius: 30, padding: "13px 28px", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fontSize: 12, letterSpacing: 2, textTransform: "uppercase", cursor: "pointer", position: "relative", zIndex: 1 }}>
+            APPLY TO JOIN
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// NEWS SCREEN
+const NewsScreen = () => {
+  const [openArticle, setOpenArticle] = useState(null);
+
+  if (openArticle) {
+    const a = ARTICLES.find(x => x.id === openArticle);
+    return (
+      <div style={{ minHeight: "100%", background: C.black, padding: "20px 20px 100px" }}>
+        <button onClick={() => setOpenArticle(null)} style={{ background: "none", border: "none", color: C.gold, fontFamily: "'Barlow Condensed', sans-serif", fontSize: 13, letterSpacing: 2, textTransform: "uppercase", cursor: "pointer", marginBottom: 28 }}>← Resources</button>
+        <div style={{ height: 160, background: `linear-gradient(135deg, ${a.color}, #0a0a0a)`, borderRadius: 18, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 60, marginBottom: 24 }}>{a.icon}</div>
+        <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 10, letterSpacing: 4, textTransform: "uppercase", color: C.gold, marginBottom: 10 }}>{a.cat}</div>
+        <div style={{ fontFamily: "'Bebas Neue', cursive", fontSize: 38, lineHeight: 0.92, color: C.white, marginBottom: 20 }}>{a.title}</div>
+        <div style={{ fontStyle: "italic", color: "#555", borderLeft: `3px solid ${C.gold}`, paddingLeft: 16, marginBottom: 20, fontSize: 13, lineHeight: 1.6 }}>
+          This section will be updated with dissertation content on this topic.
+        </div>
+        <p style={{ fontSize: 15, lineHeight: 1.8, color: C.text }}>{a.desc} This is one of the most important topics for any college athlete navigating the NIL landscape today. SSG is committed to educating every athlete we work with on these principles.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ minHeight: "100%", background: C.black, padding: "20px 20px 100px" }}>
+      <Eyebrow>Knowledge Hub</Eyebrow>
+      <GoldDivider />
+      <BigTitle size={42}>ATHLETE<br /><span style={{ color: C.gold }}>RESOURCES</span></BigTitle>
+
+      {/* Featured */}
+      <div onClick={() => setOpenArticle("nil-value")} style={{ background: C.dark, border: `1px solid ${C.border}`, borderRadius: 20, overflow: "hidden", marginBottom: 14, cursor: "pointer" }}>
+        <div style={{ height: 180, background: "linear-gradient(135deg, #1a1a0a, #333300)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 56 }}>💰</div>
+        <div style={{ padding: "20px 18px" }}>
+          <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 10, letterSpacing: 3, textTransform: "uppercase", color: C.gold, fontWeight: 700, marginBottom: 8 }}>Financial Literacy</div>
+          <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 22, fontWeight: 700, lineHeight: 1.2, color: C.white, marginBottom: 10 }}>How Much Are You Worth? Understanding Your NIL Value</div>
+          <p style={{ fontSize: 13, color: "#777", lineHeight: 1.5 }}>Most athletes have no idea how much money is on the table. SAFO AI helps you understand your true market value.</p>
+          <div style={{ color: C.gold, fontFamily: "'Barlow Condensed', sans-serif", fontSize: 12, letterSpacing: 2, textTransform: "uppercase", marginTop: 12 }}>Read More →</div>
+        </div>
+      </div>
+
+      {/* Grid */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 12 }}>
+        {ARTICLES.slice(1, 5).map(a => (
+          <div key={a.id} onClick={() => setOpenArticle(a.id)} style={{ background: C.dark, border: `1px solid ${C.border}`, borderRadius: 16, overflow: "hidden", cursor: "pointer" }}>
+            <div style={{ height: 100, background: `linear-gradient(135deg, ${a.color}, #0a0a0a)`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 34 }}>{a.icon}</div>
+            <div style={{ padding: "14px 14px 16px" }}>
+              <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 9, letterSpacing: 2, textTransform: "uppercase", color: C.gold, marginBottom: 5 }}>{a.cat}</div>
+              <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 14, fontWeight: 700, lineHeight: 1.2, color: C.white }}>{a.title}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div onClick={() => setOpenArticle("ai-nil")} style={{ background: C.dark, border: `1px solid ${C.border}`, borderRadius: 16, overflow: "hidden", cursor: "pointer", display: "flex" }}>
+        <div style={{ width: 90, background: "linear-gradient(135deg, #1a1a1a, #0a0a0a)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 32, flexShrink: 0 }}>🤖</div>
+        <div style={{ padding: "16px 14px" }}>
+          <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 9, letterSpacing: 2, textTransform: "uppercase", color: C.gold, marginBottom: 4 }}>Technology</div>
+          <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 15, fontWeight: 700, color: C.white, lineHeight: 1.2 }}>How AI Is Changing NIL for Student-Athletes</div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// CONTACT SCREEN
+const ContactScreen = () => {
+  const [form, setForm] = useState({ type: "athlete", first: "", last: "", email: "", school: "", message: "" });
+  const [sent, setSent] = useState(false);
+
+  const submit = () => {
+    if (!form.email || !form.first) return;
+    setSent(true);
+  };
+
+  return (
+    <div style={{ minHeight: "100%", background: C.black, padding: "20px 20px 100px" }}>
+      <Eyebrow>Get In Touch</Eyebrow>
+      <GoldDivider />
+      <BigTitle size={42}>LET'S<br /><span style={{ color: C.gold }}>WORK TOGETHER</span></BigTitle>
+
+      {/* Contact info */}
+      <div style={{ marginBottom: 24 }}>
+        {[
+          { icon: "📧", label: "Email", val: "safosportsgroup@gmail.com" },
+          { icon: "📍", label: "Location", val: "Founded at the University of Maryland, College Park" },
+        ].map((c, i) => (
+          <div key={i} style={{ display: "flex", gap: 14, alignItems: "center", padding: "14px 16px", background: C.dark, border: `1px solid ${C.border}`, borderRadius: 12, marginBottom: 10 }}>
+            <div style={{ width: 38, height: 38, background: "rgba(245,197,24,0.1)", borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, flexShrink: 0 }}>{c.icon}</div>
+            <div>
+              <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 9, letterSpacing: 2, textTransform: "uppercase", color: C.gold }}>{c.label}</div>
+              <div style={{ fontSize: 13, color: "#ccc" }}>{c.val}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {sent ? (
+        <Card style={{ textAlign: "center", padding: "48px 24px" }}>
+          <div style={{ fontSize: 48, marginBottom: 16 }}>✅</div>
+          <div style={{ fontFamily: "'Bebas Neue', cursive", fontSize: 32, color: C.gold, marginBottom: 12 }}>MESSAGE SENT!</div>
+          <p style={{ fontSize: 14, color: "#888" }}>We'll be in touch soon. The SSG team reviews every message personally.</p>
+          <GoldBtn onClick={() => setSent(false)} style={{ marginTop: 20 }}>SEND ANOTHER</GoldBtn>
+        </Card>
+      ) : (
+        <Card>
+          <div style={{ marginBottom: 14 }}>
+            <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 9, letterSpacing: 2, textTransform: "uppercase", color: C.gold, marginBottom: 6 }}>I am a...</div>
+            <div style={{ display: "flex", gap: 8 }}>
+              {["Athlete", "Brand", "University"].map(t => (
+                <button key={t} onClick={() => setForm(p => ({ ...p, type: t.toLowerCase() }))}
+                  style={{ flex: 1, padding: "10px 8px", borderRadius: 10, border: `1px solid ${form.type === t.toLowerCase() ? C.gold : C.border}`, background: form.type === t.toLowerCase() ? "rgba(245,197,24,0.1)" : "transparent", color: form.type === t.toLowerCase() ? C.gold : "#666", fontFamily: "'Barlow Condensed', sans-serif", fontSize: 11, letterSpacing: 1, textTransform: "uppercase", cursor: "pointer" }}>
+                  {t}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 14 }}>
+            {[{ k: "first", l: "First Name", p: "First" }, { k: "last", l: "Last Name", p: "Last" }].map(f => (
+              <div key={f.k}>
+                <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 9, letterSpacing: 2, textTransform: "uppercase", color: C.gold, marginBottom: 5 }}>{f.l}</div>
+                <input value={form[f.k]} onChange={e => setForm(p => ({ ...p, [f.k]: e.target.value }))} placeholder={f.p}
+                  style={{ width: "100%", background: C.black, border: `1px solid ${C.border}`, borderRadius: 10, padding: "11px 12px", color: C.white, fontFamily: "'Barlow', sans-serif", fontSize: 13, outline: "none", boxSizing: "border-box" }} />
+              </div>
+            ))}
+          </div>
+          {[
+            { k: "email", l: "Email", p: "your@email.com", type: "email" },
+            { k: "school", l: "School / Company", p: "University or company name", type: "text" },
+          ].map(f => (
+            <div key={f.k} style={{ marginBottom: 14 }}>
+              <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 9, letterSpacing: 2, textTransform: "uppercase", color: C.gold, marginBottom: 5 }}>{f.l}</div>
+              <input value={form[f.k]} onChange={e => setForm(p => ({ ...p, [f.k]: e.target.value }))} placeholder={f.p} type={f.type}
+                style={{ width: "100%", background: C.black, border: `1px solid ${C.border}`, borderRadius: 10, padding: "11px 14px", color: C.white, fontFamily: "'Barlow', sans-serif", fontSize: 13, outline: "none", boxSizing: "border-box" }} />
+            </div>
+          ))}
+          <div style={{ marginBottom: 18 }}>
+            <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 9, letterSpacing: 2, textTransform: "uppercase", color: C.gold, marginBottom: 5 }}>Message</div>
+            <textarea value={form.message} onChange={e => setForm(p => ({ ...p, message: e.target.value }))} placeholder="Tell us about yourself and what you're looking for..."
+              style={{ width: "100%", background: C.black, border: `1px solid ${C.border}`, borderRadius: 10, padding: "11px 14px", color: C.white, fontFamily: "'Barlow', sans-serif", fontSize: 13, outline: "none", resize: "vertical", minHeight: 100, boxSizing: "border-box" }} />
+          </div>
+          <GoldBtn onClick={submit} style={{ width: "100%", textAlign: "center" }}>SEND MESSAGE</GoldBtn>
+        </Card>
+      )}
+
+      <div style={{ marginTop: 28, padding: "0 4px" }}>
+        <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 10, letterSpacing: 3, textTransform: "uppercase", color: C.gold, marginBottom: 12 }}>Follow Us</div>
+        <div style={{ display: "flex", gap: 10 }}>
+          {["📸", "🎵", "𝕏", "in"].map((s, i) => (
+            <div key={i} style={{ width: 40, height: 40, border: `1px solid #222`, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, cursor: "pointer" }}>{s}</div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// MORE SCREEN (About, Services, For Brands combined)
+const MoreScreen = ({ onNav }) => {
+  const [section, setSection] = useState("about");
+
+  const tabs = ["about", "services", "brands"];
+
+  return (
+    <div style={{ minHeight: "100%", background: C.black }}>
+      {/* Section tabs */}
+      <div style={{ position: "sticky", top: 0, zIndex: 100, background: C.black, borderBottom: `1px solid ${C.border}`, padding: "16px 20px 0" }}>
+        <div style={{ display: "flex", gap: 0 }}>
+          {tabs.map(t => (
+            <button key={t} onClick={() => setSection(t)} style={{
+              flex: 1, padding: "10px 8px", background: "none",
+              border: "none", borderBottom: `2px solid ${section === t ? C.gold : "transparent"}`,
+              color: section === t ? C.gold : "#555",
+              fontFamily: "'Barlow Condensed', sans-serif", fontSize: 12, letterSpacing: 2,
+              textTransform: "uppercase", cursor: "pointer", transition: "all .2s",
+            }}>{t === "brands" ? "For Brands" : t.charAt(0).toUpperCase() + t.slice(1)}</button>
+          ))}
+        </div>
+      </div>
+
+      <div style={{ padding: "28px 20px 100px" }}>
+        {section === "about" && (
+          <div>
+            <Eyebrow>Our Story</Eyebrow>
+            <GoldDivider />
+            <BigTitle size={42}>YOU CAN'T<br /><span style={{ color: C.gold }}>BUY CULTURE</span></BigTitle>
+            <p style={{ fontSize: 14, lineHeight: 1.8, color: C.text, marginBottom: 16 }}>
+              Safo Sports Group was founded by Michael Ofori-Bah Safo Jr., a University of Maryland student who saw a gap no one was filling: the thousands of college athletes at mid-major schools who have real NIL value but zero representation.
+            </p>
+            <p style={{ fontSize: 14, lineHeight: 1.8, color: C.text, marginBottom: 16 }}>
+              We power SAFO AI and our team of certified agents to connect athletes with brands that actually align with who they are. Beyond the technology, what truly sets us apart is culture. Something you can't replicate, buy, or automate.
+            </p>
+            <p style={{ fontSize: 14, lineHeight: 1.8, color: C.text, marginBottom: 24 }}>
+              Growing up around athletes from marginalized communities, we know firsthand the difference proper representation can make. Our motto? <strong style={{ color: C.gold }}>"Worry about ball, and we'll handle the rest."</strong>
+            </p>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 28 }}>
+              {["The First Black NIL Marketing Agency", "Gen-Z Led and Operated", "Non-Exclusive Partnerships", "Certified Marketing Experts", "Currently in 4 States Licensed"].map((t, i) => (
+                <Tag key={i} variant={i % 2 === 0 ? "solid" : "outline"}>{t}</Tag>
+              ))}
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 28 }}>
+              <StatBlock num="4" label="Athletes Currently Signed" />
+              <StatBlock num="$80K+" label="In Deals Negotiated" />
+              <StatBlock num="4" label="States Currently Registered" />
+              <StatBlock num="$1.67B" label="National NIL Market Size" />
+            </div>
+            <Card style={{ background: C.dark, padding: "24px 20px" }}>
+              <div style={{ fontFamily: "'Bebas Neue', cursive", fontSize: 32, color: C.gold, lineHeight: 1.1, marginBottom: 16 }}>
+                "Worry About Ball.<br />We Handle the Rest."
+              </div>
+              <p style={{ fontSize: 13, color: "#888", lineHeight: 1.7, marginBottom: 16 }}>
+                At SSG, we are Black-owned, student-run, and built from the same fabric as the athletes we represent. That's not marketing. That's who we are.
+              </p>
+              <GoldBtn onClick={() => onNav("contact")} outline>GET REPRESENTED</GoldBtn>
+            </Card>
+          </div>
+        )}
+
+        {section === "services" && (
+          <div>
+            <Eyebrow>What We Do</Eyebrow>
+            <GoldDivider />
+            <BigTitle size={42}>OUR<br /><span style={{ color: C.gold }}>SERVICES</span></BigTitle>
+            {SERVICES.map((s, i) => (
+              <Card key={i} style={{ marginBottom: 14, position: "relative", overflow: "hidden" }}>
+                <div style={{ fontFamily: "'Bebas Neue', cursive", fontSize: 56, color: "rgba(245,197,24,0.07)", position: "absolute", top: 14, right: 16, lineHeight: 1 }}>{s.num}</div>
+                <div style={{ width: 44, height: 44, background: C.gold, borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, marginBottom: 16 }}>{s.icon}</div>
+                <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 18, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", color: C.white, marginBottom: 10, lineHeight: 1.2 }}>{s.title}</div>
+                <div style={{ fontSize: 13, lineHeight: 1.65, color: "#888" }}>{s.desc}</div>
+              </Card>
+            ))}
+            <div style={{ background: C.gold, borderRadius: 18, padding: "36px 20px", textAlign: "center", marginTop: 8, position: "relative", overflow: "hidden" }}>
+              <div style={{ position: "absolute", fontFamily: "'Bebas Neue', cursive", fontSize: 100, color: "rgba(0,0,0,0.06)", left: "50%", top: "50%", transform: "translate(-50%,-50%)" }}>SSG</div>
+              <div style={{ fontFamily: "'Bebas Neue', cursive", fontSize: 36, color: C.black, lineHeight: 0.92, marginBottom: 12, position: "relative", zIndex: 1 }}>READY TO START<br />EARNING?</div>
+              <p style={{ fontSize: 13, color: "rgba(0,0,0,0.65)", marginBottom: 20, lineHeight: 1.6, position: "relative", zIndex: 1 }}>Let us handle the brand deals so you can focus on what you do best, BALLING OUT!</p>
+              <button onClick={() => onNav("contact")} style={{ background: C.black, color: C.gold, border: "none", borderRadius: 30, padding: "13px 28px", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fontSize: 12, letterSpacing: 2, textTransform: "uppercase", cursor: "pointer", position: "relative", zIndex: 1 }}>GET REPRESENTED</button>
+            </div>
+          </div>
+        )}
+
+        {section === "brands" && (
+          <div>
+            <Eyebrow>Brand Partnerships</Eyebrow>
+            <GoldDivider />
+            <BigTitle size={36}>ARE YOU A BRAND<br /><span style={{ color: C.gold }}>LOOKING TO WORK<br />WITH AN ATHLETE?</span></BigTitle>
+            <p style={{ fontSize: 14, lineHeight: 1.8, color: C.text, marginBottom: 16 }}>
+              Amplify your marketing impact by featuring an athlete in your next campaign. Our team specializes in pairing brands with athletes who not only resonate with your message but also engage your target audience.
+            </p>
+            <p style={{ fontSize: 14, lineHeight: 1.8, color: C.text, marginBottom: 24 }}>
+              We handle everything: athlete identification, outreach, contract negotiation, compliance checks, and campaign coordination. You just show up with a great product.
+            </p>
+            <GoldBtn onClick={() => onNav("contact")} style={{ width: "100%", textAlign: "center", marginBottom: 28 }}>LET'S CONNECT</GoldBtn>
+
+            <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 11, letterSpacing: 3, textTransform: "uppercase", color: C.gold, marginBottom: 16 }}>Current Partners</div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10, marginBottom: 24 }}>
+              {BRANDS.map((b, i) => (
+                <div key={i} style={{ background: C.dark, border: `1px solid ${C.border}`, borderRadius: 14, height: 80, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 5, cursor: "pointer", transition: "border-color .2s" }}>
+                  <div style={{ fontSize: 22 }}>{b.icon}</div>
+                  <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 9, letterSpacing: 1, textTransform: "uppercase", color: "#555", textAlign: "center", lineHeight: 1.2 }}>{b.name}</div>
+                </div>
+              ))}
+              <div style={{ background: "transparent", border: `1.5px dashed rgba(245,197,24,0.4)`, borderRadius: 14, height: 80, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 5, cursor: "pointer" }} onClick={() => onNav("contact")}>
+                <div style={{ fontSize: 18, color: C.gold }}>+</div>
+                <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 9, letterSpacing: 1, textTransform: "uppercase", color: C.gold }}>Your Brand</div>
+              </div>
+            </div>
+
+            <div style={{ background: C.gold, borderRadius: 18, padding: "36px 20px", textAlign: "center", position: "relative", overflow: "hidden" }}>
+              <div style={{ position: "absolute", fontFamily: "'Bebas Neue', cursive", fontSize: 100, color: "rgba(0,0,0,0.06)", left: "50%", top: "50%", transform: "translate(-50%,-50%)" }}>SSG</div>
+              <div style={{ fontFamily: "'Bebas Neue', cursive", fontSize: 36, color: C.black, lineHeight: 0.92, marginBottom: 12, position: "relative", zIndex: 1 }}>AMPLIFY YOUR<br />BRAND TODAY</div>
+              <button onClick={() => onNav("contact")} style={{ background: C.black, color: C.gold, border: "none", borderRadius: 30, padding: "13px 28px", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fontSize: 12, letterSpacing: 2, textTransform: "uppercase", cursor: "pointer", position: "relative", zIndex: 1 }}>GET IN TOUCH</button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// ── TAB BAR ───────────────────────────────────────────────────────────────────
+const TAB_ITEMS = [
+  { id: "home", label: "Home", icon: (active) => (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+      <path d="M3 9.5L12 3L21 9.5V20C21 20.55 20.55 21 20 21H15V15H9V21H4C3.45 21 3 20.55 3 20V9.5Z" stroke={active ? C.gold : "#555"} strokeWidth="1.8" fill={active ? "rgba(245,197,24,0.15)" : "none"} strokeLinejoin="round" />
+    </svg>
+  )},
+  { id: "safo", label: "SAFO AI", icon: (active) => (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+      <rect x="3" y="3" width="18" height="18" rx="4" stroke={active ? C.gold : "#555"} strokeWidth="1.8" fill={active ? "rgba(245,197,24,0.15)" : "none"} />
+      <circle cx="9" cy="9" r="1.5" fill={active ? C.gold : "#555"} />
+      <circle cx="15" cy="9" r="1.5" fill={active ? C.gold : "#555"} />
+      <path d="M8 15C8 15 9.5 17 12 17C14.5 17 16 15 16 15" stroke={active ? C.gold : "#555"} strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  )},
+  { id: "roster", label: "Roster", icon: (active) => (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+      <circle cx="9" cy="7" r="3" stroke={active ? C.gold : "#555"} strokeWidth="1.8" fill={active ? "rgba(245,197,24,0.15)" : "none"} />
+      <circle cx="17" cy="8" r="2.5" stroke={active ? C.gold : "#555"} strokeWidth="1.8" fill={active ? "rgba(245,197,24,0.1)" : "none"} />
+      <path d="M2 19C2 16.24 5.13 14 9 14C12.87 14 16 16.24 16 19" stroke={active ? C.gold : "#555"} strokeWidth="1.8" strokeLinecap="round" />
+      <path d="M17 13C19.21 13 21 14.57 21 16.5" stroke={active ? C.gold : "#555"} strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  )},
+  { id: "news", label: "News", icon: (active) => (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+      <rect x="3" y="5" width="18" height="14" rx="2" stroke={active ? C.gold : "#555"} strokeWidth="1.8" fill={active ? "rgba(245,197,24,0.15)" : "none"} />
+      <line x1="7" y1="9" x2="17" y2="9" stroke={active ? C.gold : "#555"} strokeWidth="1.5" strokeLinecap="round" />
+      <line x1="7" y1="12" x2="14" y2="12" stroke={active ? C.gold : "#555"} strokeWidth="1.5" strokeLinecap="round" />
+      <line x1="7" y1="15" x2="11" y2="15" stroke={active ? C.gold : "#555"} strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  )},
+  { id: "more", label: "More", icon: (active) => (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+      <circle cx="5" cy="12" r="1.5" fill={active ? C.gold : "#555"} />
+      <circle cx="12" cy="12" r="1.5" fill={active ? C.gold : "#555"} />
+      <circle cx="19" cy="12" r="1.5" fill={active ? C.gold : "#555"} />
+    </svg>
+  )},
+];
+
+// ── MAIN APP ──────────────────────────────────────────────────────────────────
+export default function App() {
+  const [currentTab, setCurrentTab] = useState("home");
+  const [loading, setLoading] = useState(true);
+  const [transitioning, setTransitioning] = useState(false);
+  const [contentVisible, setContentVisible] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 1400);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const navigate = (tab) => {
+    if (tab === currentTab) return;
+    setTransitioning(true);
+    setContentVisible(false);
+    setTimeout(() => {
+      setCurrentTab(tab);
+      setTransitioning(false);
+      setContentVisible(true);
+    }, 420);
+  };
+
+  // Contact shortcut from any screen
+  const handleNav = (dest) => {
+    if (dest === "contact") navigate("more");
+    else if (dest === "about") navigate("more");
+    else if (dest === "services") navigate("more");
+    else if (dest === "brands") navigate("more");
+    else navigate(dest);
+  };
+
+  const screens = {
+    home: <HomeScreen onNav={handleNav} />,
+    safo: <SAFOScreen onNav={handleNav} />,
+    roster: <RosterScreen onNav={handleNav} />,
+    news: <NewsScreen />,
+    more: <MoreScreen onNav={handleNav} />,
+  };
+
+  return (
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@300;400;500&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { background: #0A0A0A; color: #fff; font-family: 'Barlow', sans-serif; overscroll-behavior: none; }
+        ::-webkit-scrollbar { display: none; }
+        select { -webkit-appearance: none; }
+        @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+        @keyframes bounce {
+          0%, 100% { transform: translateY(0) scaleX(1) scaleY(1); }
+          45% { transform: translateY(-32px) scaleX(.93) scaleY(1.07); }
+          55% { transform: translateY(-32px) scaleX(.93) scaleY(1.07); }
+          90% { transform: translateY(4px) scaleX(1.14) scaleY(.87); }
+        }
+        @keyframes shadowPulse {
+          0%, 100% { transform: scaleX(1); opacity: .2; }
+          50% { transform: scaleX(.5); opacity: .05; }
+          90% { transform: scaleX(1.4); opacity: .3; }
+        }
+        @keyframes pulseH { from { opacity: .5; } to { opacity: 1; } }
+        @keyframes fadeInOut { 0%, 100% { opacity: .3; } 50% { opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(16px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        input::placeholder, textarea::placeholder { color: #444; }
+        select option { background: #161616; }
+      `}</style>
+
+      {/* LOADER */}
+      <SportLoader visible={loading || transitioning} />
+
+      {/* APP SHELL */}
+      <div style={{
+        width: "100%", maxWidth: 430, margin: "0 auto",
+        minHeight: "100vh", position: "relative",
+        background: "#0A0A0A",
+        display: "flex", flexDirection: "column",
+      }}>
+        {/* Header */}
+        <div style={{
+          position: "fixed", top: 0, left: "50%", transform: "translateX(-50%)",
+          width: "100%", maxWidth: 430,
+          height: 56, background: "rgba(10,10,10,0.97)",
+          backdropFilter: "blur(12px)",
+          borderBottom: "1px solid #1e1e1e",
+          display: "flex", alignItems: "center", justifyContent: "space-between",
+          padding: "0 20px", zIndex: 500,
+        }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div style={{
+              width: 36, height: 36, background: "#0A0A0A",
+              border: `2px solid ${C.gold}`,
+              borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center",
+              fontFamily: "'Bebas Neue', cursive", fontSize: 14, color: C.gold, letterSpacing: 1,
+            }}>SSG</div>
+            <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 10, letterSpacing: 2, textTransform: "uppercase", color: "#555", lineHeight: 1.3 }}>
+              Safo Sports Group<br /><span style={{ color: "#333" }}>NIL Marketing Agency</span>
+            </div>
+          </div>
+          <button onClick={() => navigate("more")} style={{ background: C.gold, color: C.black, border: "none", borderRadius: 20, padding: "7px 14px", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fontSize: 10, letterSpacing: 2, textTransform: "uppercase", cursor: "pointer" }}>
+            JOIN
+          </button>
+        </div>
+
+        {/* Screen content */}
+        <div style={{
+          flex: 1, marginTop: 56, marginBottom: 64,
+          overflowY: "auto", overflowX: "hidden",
+          opacity: contentVisible ? 1 : 0,
+          transform: contentVisible ? "none" : "translateY(8px)",
+          transition: "opacity .3s ease, transform .3s ease",
+          WebkitOverflowScrolling: "touch",
+        }}>
+          {screens[currentTab]}
+        </div>
+
+        {/* Bottom Tab Bar */}
+        <div style={{
+          position: "fixed", bottom: 0, left: "50%", transform: "translateX(-50%)",
+          width: "100%", maxWidth: 430,
+          height: 64,
+          background: "rgba(10,10,10,0.98)",
+          backdropFilter: "blur(20px)",
+          borderTop: "1px solid #1e1e1e",
+          display: "flex", alignItems: "center",
+          zIndex: 500,
+          paddingBottom: "env(safe-area-inset-bottom)",
+        }}>
+          {TAB_ITEMS.map(tab => {
+            const active = currentTab === tab.id;
+            return (
+              <button key={tab.id} onClick={() => navigate(tab.id)} style={{
+                flex: 1, height: "100%", background: "none", border: "none",
+                display: "flex", flexDirection: "column", alignItems: "center",
+                justifyContent: "center", gap: 3, cursor: "pointer",
+                position: "relative",
+              }}>
+                {active && (
+                  <div style={{
+                    position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)",
+                    width: 24, height: 2, background: C.gold, borderRadius: "0 0 2px 2px",
+                  }} />
+                )}
+                {tab.icon(active)}
+                <span style={{
+                  fontFamily: "'Barlow Condensed', sans-serif",
+                  fontSize: 9, letterSpacing: 1, textTransform: "uppercase",
+                  color: active ? C.gold : "#444",
+                  transition: "color .2s",
+                }}>{tab.label}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    </>
+  );
+}
